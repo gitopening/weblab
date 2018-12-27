@@ -19,4 +19,14 @@ public class IMApplication  extends Application {
      * 先定义一个全局常量，暂时不清楚用在哪里
      */
     public static boolean gifRunning = true;//gif是否运行
+
+    public void onCreate() {
+        super.onCreate();
+        logger.i("Application starts");
+        startIMService();
+    }
+
+    private void startIMService() {
+        logger.i("start IMService");
+    }
 }
