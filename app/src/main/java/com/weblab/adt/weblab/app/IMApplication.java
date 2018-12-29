@@ -1,7 +1,9 @@
 package com.weblab.adt.weblab.app;
 
 import android.app.Application;
+import android.content.Intent;
 
+import com.weblab.adt.weblab.imservice.service.IMService;
 import com.weblab.adt.weblab.utils.Logger;
 
 
@@ -28,5 +30,8 @@ public class IMApplication  extends Application {
 
     private void startIMService() {
         logger.i("start IMService");
+        Intent intent = new Intent();
+        intent.setClass(this, IMService.class);
+        startService(intent);
     }
 }
