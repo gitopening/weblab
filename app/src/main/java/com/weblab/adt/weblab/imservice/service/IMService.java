@@ -7,6 +7,7 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import com.weblab.adt.weblab.config.SysConstant;
+import com.weblab.adt.weblab.imservice.event.LoginEvent;
 import com.weblab.adt.weblab.imservice.manager.IMSocketManager;
 import com.weblab.adt.weblab.utils.Logger;
 
@@ -18,8 +19,11 @@ public class IMService extends Service {
     //所有的管理类
     private IMSocketManager socketMgr = IMSocketManager.instance();
 
-    /**binder*/
+    /**
+     * binder
+     */
     private IMServiceBinder binder = new IMServiceBinder();
+
     public class IMServiceBinder extends Binder {
         public IMService getService() {
             return IMService.this;
@@ -51,5 +55,23 @@ public class IMService extends Service {
         // 在这个地方是否执行 stopForeground呐
         EventBus.getDefault().unregister(this);
         super.onDestroy();
+    }
+
+    // EventBus 事件驱动
+    public void onEvent(LoginEvent event) {
+        switch (event) {
+            case LOGIN_OK:
+//                onNormalLoginOk();
+                break;
+            case LOCAL_LOGIN_SUCCESS:
+//                onLocalLoginOk();
+                break;
+            case LOCAL_LOGIN_MSG_SERVICE:
+//                onLocalNetOk();
+                break;
+            case LOGIN_OUT:
+//                handleLoginout();
+                break;
+        }
     }
 }
