@@ -15,8 +15,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.weblab.adt.weblab.DB.sp.SystemConfigSp;
 import com.weblab.adt.weblab.MainActivity;
 import com.weblab.adt.weblab.R;
+import com.weblab.adt.weblab.config.UrlConstant;
 import com.weblab.adt.weblab.imservice.event.SocketEvent;
 import com.weblab.adt.weblab.imservice.service.IMService;
 import com.weblab.adt.weblab.ui.base.TTBaseActivity;
@@ -152,11 +154,10 @@ public class LoginActivity extends TTBaseActivity {
         intputManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         logger.d("login#onCreate");
 
-//        SystemConfigSp.instance().init(getApplicationContext());
-//        if (TextUtils.isEmpty(SystemConfigSp.instance().getStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER))) {
-//            SystemConfigSp.instance().setStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER, UrlConstant.ACCESS_MSG_ADDRESS);
-//        }
-//
+        SystemConfigSp.instance().init(getApplicationContext());
+        if (TextUtils.isEmpty(SystemConfigSp.instance().getStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER))) {
+            SystemConfigSp.instance().setStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER, UrlConstant.ACCESS_MSG_ADDRESS);
+        }
 //        imServiceConnector.connect(LoginActivity.this);
         EventBus.getDefault().register(this);
 
