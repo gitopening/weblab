@@ -15,12 +15,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.weblab.adt.weblab.DB.sp.LoginSp;
 import com.weblab.adt.weblab.DB.sp.SystemConfigSp;
 import com.weblab.adt.weblab.MainActivity;
 import com.weblab.adt.weblab.R;
 import com.weblab.adt.weblab.config.UrlConstant;
 import com.weblab.adt.weblab.imservice.event.SocketEvent;
+import com.weblab.adt.weblab.imservice.manager.IMLoginManager;
 import com.weblab.adt.weblab.imservice.service.IMService;
+import com.weblab.adt.weblab.imservice.support.IMServiceConnector;
 import com.weblab.adt.weblab.ui.base.TTBaseActivity;
 import com.weblab.adt.weblab.utils.Logger;
 
@@ -54,58 +57,58 @@ public class LoginActivity extends TTBaseActivity {
     private boolean autoLogin = true;
     private boolean loginSuccess = false;
 
-//    private IMServiceConnector imServiceConnector = new IMServiceConnector() {
-//        @Override
-//        public void onServiceDisconnected() {
-//        }
-//
-//        @Override
-//        public void onIMServiceConnected() {
-//            logger.d("login#onIMServiceConnected");
-//            imService = imServiceConnector.getIMService();
-//            try {
-//                do {
-//                    if (imService == null) {
-//                        //后台服务启动链接失败
-//                        break;
-//                    }
-//                    IMLoginManager loginManager = imService.getLoginManager();
-//                    LoginSp loginSp = imService.getLoginSp();
-//                    if (loginManager == null || loginSp == null) {
-//                        // 无法获取登陆控制器
-//                        break;
-//                    }
-//
-//                    LoginSp.SpLoginIdentity loginIdentity = loginSp.getLoginIdentity();
-//                    if (loginIdentity == null) {
-//                        // 之前没有保存任何登陆相关的，跳转到登陆页面
-//                        break;
-//                    }
-//
-//                    mNameView.setText(loginIdentity.getLoginName());
-//                    if (TextUtils.isEmpty(loginIdentity.getPwd())) {
-//                        // 密码为空，可能是loginOut
-//                        break;
-//                    }
-//                    mPasswordView.setText(loginIdentity.getPwd());
-//
-//                    if (autoLogin == false) {
-//                        break;
-//                    }
-//
-//                    handleGotLoginIdentity(loginIdentity);
-//                    return;
-//                } while (false);
-//
-//                // 异常分支都会执行这个
-//                handleNoLoginIdentity();
-//            } catch (Exception e) {
-//                // 任何未知的异常
-//                logger.w("loadIdentity failed");
-//                handleNoLoginIdentity();
-//            }
-//        }
-//    };
+    private IMServiceConnector imServiceConnector = new IMServiceConnector() {
+        @Override
+        public void onServiceDisconnected() {
+        }
+
+        @Override
+        public void onIMServiceConnected() {
+            logger.d("login#onIMServiceConnected");
+            imService = imServiceConnector.getIMService();
+            try {
+                do {
+                    if (imService == null) {
+                        //后台服务启动链接失败
+                        break;
+                    }
+                    IMLoginManager loginManager = imService.getLoginManager();
+                    LoginSp loginSp = imService.getLoginSp();
+                    if (loginManager == null || loginSp == null) {
+                        // 无法获取登陆控制器
+                        break;
+                    }
+
+                    LoginSp.SpLoginIdentity loginIdentity = loginSp.getLoginIdentity();
+                    if (loginIdentity == null) {
+                        // 之前没有保存任何登陆相关的，跳转到登陆页面
+                        break;
+                    }
+
+                    mNameView.setText(loginIdentity.getLoginName());
+                    if (TextUtils.isEmpty(loginIdentity.getPwd())) {
+                        // 密码为空，可能是loginOut
+                        break;
+                    }
+                    mPasswordView.setText(loginIdentity.getPwd());
+
+                    if (autoLogin == false) {
+                        break;
+                    }
+
+                    handleGotLoginIdentity(loginIdentity);
+                    return;
+                } while (false);
+
+                // 异常分支都会执行这个
+                handleNoLoginIdentity();
+            } catch (Exception e) {
+                // 任何未知的异常
+                logger.w("loadIdentity failed");
+                handleNoLoginIdentity();
+            }
+        }
+    };
 
 
     /**
@@ -124,21 +127,21 @@ public class LoginActivity extends TTBaseActivity {
     /**
      * 自动登陆
      */
-//    private void handleGotLoginIdentity(final LoginSp.SpLoginIdentity loginIdentity) {
-//        logger.i("login#handleGotLoginIdentity");
-//
-//        uiHandler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                logger.d("login#start auto login");
-//                if (imService == null || imService.getLoginManager() == null) {
-//                    Toast.makeText(LoginActivity.this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
-//                    showLoginPage();
-//                }
-//                imService.getLoginManager().login(loginIdentity);
-//            }
-//        }, 500);
-//    }
+    private void handleGotLoginIdentity(final LoginSp.SpLoginIdentity loginIdentity) {
+        logger.i("login#handleGotLoginIdentity");
+
+        uiHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                logger.d("login#start auto login");
+                if (imService == null || imService.getLoginManager() == null) {
+                    Toast.makeText(LoginActivity.this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
+                    showLoginPage();
+                }
+                imService.getLoginManager().login(loginIdentity);
+            }
+        }, 500);
+    }
 
 
     private void showLoginPage() {
