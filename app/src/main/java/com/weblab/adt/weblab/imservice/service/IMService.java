@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
+import com.weblab.adt.weblab.DB.sp.LoginSp;
 import com.weblab.adt.weblab.config.SysConstant;
 import com.weblab.adt.weblab.imservice.event.LoginEvent;
+import com.weblab.adt.weblab.imservice.manager.IMLoginManager;
 import com.weblab.adt.weblab.imservice.manager.IMSocketManager;
 import com.weblab.adt.weblab.utils.Logger;
 
@@ -18,6 +20,8 @@ public class IMService extends Service {
 
     //所有的管理类
     private IMSocketManager socketMgr = IMSocketManager.instance();
+    private IMLoginManager loginMgr = IMLoginManager.instance();
+    private LoginSp loginSp = LoginSp.instance();
 
     /**
      * binder
@@ -74,4 +78,14 @@ public class IMService extends Service {
                 break;
         }
     }
+
+    /**-----------------get/set 的实体定义---------------------*/
+    public IMLoginManager getLoginManager() {
+        return loginMgr;
+    }
+
+    public LoginSp getLoginSp() {
+        return loginSp;
+    }
+
 }
