@@ -167,7 +167,7 @@ public class LoginActivity extends TTBaseActivity {
         if (TextUtils.isEmpty(SystemConfigSp.instance().getStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER))) {
             SystemConfigSp.instance().setStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER, UrlConstant.ACCESS_MSG_ADDRESS);
         }
-//        imServiceConnector.connect(LoginActivity.this);
+        imServiceConnector.connect(LoginActivity.this);
         EventBus.getDefault().register(this);
 
         setContentView(R.layout.tt_activity_login);
