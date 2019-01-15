@@ -55,7 +55,9 @@ public class LoginActivity extends TTBaseActivity {
     private View loginPage;
     private View splashPage;
     private View mLoginStatusView;
-    private TextView mSwitchLoginServer,sign_switch_login_server_vs,sign_switch_login_server_cs,sign_switch_login_server_qq;
+    private TextView mSwitchLoginServer,sign_switch_login_server_vs,
+            sign_switch_login_server_cs,sign_switch_login_server_qq,
+            dialog_tip;
     private InputMethodManager intputManager;
 
 
@@ -175,24 +177,33 @@ public class LoginActivity extends TTBaseActivity {
         sign_switch_login_server_cs = (TextView)findViewById(R.id.sign_switch_login_server_cs);
         sign_switch_login_server_qq = (TextView)findViewById(R.id.sign_switch_login_server_qq);
         sign_switch_login_server_vs = (TextView)findViewById(R.id.sign_switch_login_server_vs);
-        mSwitchLoginServer.setOnClickListener(new View.OnClickListener(){
+        mSwitchLoginServer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(LoginActivity.this, android.R.style.Theme_Holo_Light_Dialog));
-                LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View dialog_view = inflater.inflate(R.layout.tt_custom_dialog, null);
-                final EditText editText = (EditText)dialog_view.findViewById(R.id.dialog_edit_content);
-                editText.setText(SystemConfigSp.instance().getStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER));
-                TextView textText = (TextView)dialog_view.findViewById(R.id.dialog_title);
+                dialog_tip = (TextView) dialog_view.findViewById(R.id.dialog_tip);
+                final EditText editText = (EditText) dialog_view.findViewById(R.id.dialog_edit_content);
+                String tempUrl = SystemConfigSp.instance().getStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER);
+                dialog_tip.setText(tempUrl);
+                if (tempUrl.contains(UrlConstant.ACCESS_MSG_ADDRESS_END)) {
+                    tempUrl = tempUrl.replace(UrlConstant.ACCESS_MSG_ADDRESS_END, "");
+                }
+//                editText.setText(SystemConfigSp.instance().getStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER));
+                editText.setText(tempUrl);
+                TextView textText = (TextView) dialog_view.findViewById(R.id.dialog_title);
                 textText.setText(R.string.switch_login_server_title);
                 builder.setView(dialog_view);
                 builder.setPositiveButton(getString(R.string.tt_ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        if(!TextUtils.isEmpty(editText.getText().toString().trim()))
-                        {
-                            SystemConfigSp.instance().setStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER,editText.getText().toString().trim());
+                        if (!TextUtils.isEmpty(editText.getText().toString().trim())) {
+//                            SystemConfigSp.instance().setStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER,editText.getText().toString().trim());
+                            SystemConfigSp.instance().setStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER, editText.getText().toString().trim() + UrlConstant.ACCESS_MSG_ADDRESS_END);
+                            String tempUrl = editText.getText().toString().trim() + UrlConstant.ACCESS_MSG_ADDRESS_END;
+                            dialog_tip.setText(tempUrl);
                             dialog.dismiss();
                         }
                     }
