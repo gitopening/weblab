@@ -1,10 +1,15 @@
 package com.weblab.adt.weblab.ui.activity;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -19,6 +24,7 @@ import com.weblab.adt.weblab.DB.sp.LoginSp;
 import com.weblab.adt.weblab.DB.sp.SystemConfigSp;
 import com.weblab.adt.weblab.MainActivity;
 import com.weblab.adt.weblab.R;
+import com.weblab.adt.weblab.config.IntentConstant;
 import com.weblab.adt.weblab.config.UrlConstant;
 import com.weblab.adt.weblab.imservice.event.SocketEvent;
 import com.weblab.adt.weblab.imservice.manager.IMLoginManager;
@@ -138,7 +144,7 @@ public class LoginActivity extends TTBaseActivity {
                     Toast.makeText(LoginActivity.this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
                     showLoginPage();
                 }
-                imService.getLoginManager().login(loginIdentity);
+//                imService.getLoginManager().login(loginIdentity);
             }
         }, 500);
     }
@@ -165,93 +171,83 @@ public class LoginActivity extends TTBaseActivity {
         EventBus.getDefault().register(this);
 
         setContentView(R.layout.tt_activity_login);
-//        mSwitchLoginServer = (TextView)findViewById(R.id.sign_switch_login_server);
-//        sign_switch_login_server_cs = (TextView)findViewById(R.id.sign_switch_login_server_cs);
-//        sign_switch_login_server_qq = (TextView)findViewById(R.id.sign_switch_login_server_qq);
-//        sign_switch_login_server_vs = (TextView)findViewById(R.id.sign_switch_login_server_vs);
-//        mSwitchLoginServer.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View view) {
-//                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(LoginActivity.this, android.R.style.Theme_Holo_Light_Dialog));
-//                LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//                View dialog_view = inflater.inflate(R.layout.tt_custom_dialog, null);
-//                final EditText editText = (EditText)dialog_view.findViewById(R.id.dialog_edit_content);
-////                editText.setText(SystemConfigSp.instance().getStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER));
-//                TextView textText = (TextView)dialog_view.findViewById(R.id.dialog_title);
-//                textText.setText(R.string.switch_login_server_title);
-//                builder.setView(dialog_view);
-//                builder.setPositiveButton(getString(R.string.tt_ok), new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//
-//                        if(!TextUtils.isEmpty(editText.getText().toString().trim()))
-//                        {
-////                            SystemConfigSp.instance().setStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER,editText.getText().toString().trim());
-//                            dialog.dismiss();
-//                        }
-//                    }
-//                });
-//                builder.setNegativeButton(getString(R.string.tt_cancel), new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        dialogInterface.dismiss();
-//                    }
-//                });
-//                builder.show();
-//            }
-//        });
-//
-//        mNameView = (EditText) findViewById(R.id.name);
-//        mPasswordView = (EditText) findViewById(R.id.password);
-//        //便于大家调试，服务器和用户名默认值改成线上他人的
-//        mNameView.setText("小赵");
-//        mPasswordView.setText("不为空就好");
-//        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-//                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-//                    attemptLogin();
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
-//        mLoginStatusView = findViewById(R.id.login_status);
-//        findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                intputManager.hideSoftInputFromWindow(mPasswordView.getWindowToken(), 0);
-//                attemptLogin();
-//            }
-//        });
-//
-//        sign_switch_login_server_cs.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //这个项目需要用户名和密码一样 账号可以有1001-1005  47.97.181.98:8080
-//                mNameView.setText("小赵");
-//                mPasswordView.setText("不为空就好");
-////                SystemConfigSp.instance().setStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER, sign_switch_login_server_cs.getText().toString().trim());
-//            }
-//        });
-//        sign_switch_login_server_qq.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                mNameView.setText("1005");
-//                mPasswordView.setText("1005");
-////                SystemConfigSp.instance().setStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER, sign_switch_login_server_qq.getText().toString().trim());
-//            }
-//        });
-//        sign_switch_login_server_vs.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //Virtual Machines 自己虚拟机服务器地址
-//                mNameView.setText("101");
-//                mPasswordView.setText("不为空就好");
-////                SystemConfigSp.instance().setStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER, sign_switch_login_server_vs.getText().toString().trim());
-//            }
-//        });
-//        initAutoLogin();
+        mSwitchLoginServer = (TextView)findViewById(R.id.sign_switch_login_server);
+        sign_switch_login_server_cs = (TextView)findViewById(R.id.sign_switch_login_server_cs);
+        sign_switch_login_server_qq = (TextView)findViewById(R.id.sign_switch_login_server_qq);
+        sign_switch_login_server_vs = (TextView)findViewById(R.id.sign_switch_login_server_vs);
+        mSwitchLoginServer.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(LoginActivity.this, android.R.style.Theme_Holo_Light_Dialog));
+                LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View dialog_view = inflater.inflate(R.layout.tt_custom_dialog, null);
+                final EditText editText = (EditText)dialog_view.findViewById(R.id.dialog_edit_content);
+                editText.setText(SystemConfigSp.instance().getStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER));
+                TextView textText = (TextView)dialog_view.findViewById(R.id.dialog_title);
+                textText.setText(R.string.switch_login_server_title);
+                builder.setView(dialog_view);
+                builder.setPositiveButton(getString(R.string.tt_ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        if(!TextUtils.isEmpty(editText.getText().toString().trim()))
+                        {
+                            SystemConfigSp.instance().setStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER,editText.getText().toString().trim());
+                            dialog.dismiss();
+                        }
+                    }
+                });
+                builder.setNegativeButton(getString(R.string.tt_cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.show();
+            }
+        });
+
+        mNameView = (EditText) findViewById(R.id.name);
+        mPasswordView = (EditText) findViewById(R.id.password);
+        //便于大家调试，服务器和用户名默认值改成线上他人的
+        mNameView.setText("小赵");
+        mPasswordView.setText("不为空就好");
+        mLoginStatusView = findViewById(R.id.login_status);
+        findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                intputManager.hideSoftInputFromWindow(mPasswordView.getWindowToken(), 0);
+                attemptLogin();
+            }
+        });
+
+        sign_switch_login_server_cs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //这个项目需要用户名和密码一样 账号可以有1001-1005  47.97.181.98:8080
+                mNameView.setText("小赵");
+                mPasswordView.setText("不为空就好");
+                SystemConfigSp.instance().setStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER, sign_switch_login_server_cs.getText().toString().trim());
+            }
+        });
+        sign_switch_login_server_qq.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mNameView.setText("1005");
+                mPasswordView.setText("1005");
+                SystemConfigSp.instance().setStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER, sign_switch_login_server_qq.getText().toString().trim());
+            }
+        });
+        sign_switch_login_server_vs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Virtual Machines 自己虚拟机服务器地址
+                mNameView.setText("101");
+                mPasswordView.setText("不为空就好");
+                SystemConfigSp.instance().setStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER, sign_switch_login_server_vs.getText().toString().trim());
+            }
+        });
+        initAutoLogin();
     }
 
     private void initAutoLogin() {
@@ -299,9 +295,9 @@ public class LoginActivity extends TTBaseActivity {
     private boolean shouldAutoLogin() {
         Intent intent = getIntent();
         if (intent != null) {
-//            boolean notAutoLogin = intent.getBooleanExtra(IntentConstant.KEY_LOGIN_NOT_AUTO, false);
-//            logger.d("login#notAutoLogin:%s", notAutoLogin);
-//            return !notAutoLogin;
+            boolean notAutoLogin = intent.getBooleanExtra(IntentConstant.KEY_LOGIN_NOT_AUTO, false);
+            logger.d("login#notAutoLogin:%s", notAutoLogin);
+            return !notAutoLogin;
         }
         return true;
     }
