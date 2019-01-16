@@ -348,11 +348,10 @@ public class LoginActivity extends TTBaseActivity {
         } else {
             showProgress(true);
             if (imService != null) {
-//				boolean userNameChanged = true;
-//				boolean pwdChanged = true;
                 loginName = loginName.trim();
                 mPassword = mPassword.trim();
-//                imService.getLoginManager().login(loginName, mPassword);
+                logger.d("login#notAutoLogin:%s", "点击事件开始登陆操作");
+                imService.getLoginManager().login(loginName, mPassword);
             }
         }
     }
