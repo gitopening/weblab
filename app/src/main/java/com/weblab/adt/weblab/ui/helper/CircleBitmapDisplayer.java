@@ -1,4 +1,4 @@
-package com.weblab.adt.weblab.utils.ui.helper;
+package com.weblab.adt.weblab.ui.helper;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

@@ -17,7 +17,7 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.weblab.adt.weblab.R;
 import com.weblab.adt.weblab.config.SysConstant;
-import com.weblab.adt.weblab.utils.ui.helper.CircleBitmapDisplayer;
+import com.weblab.adt.weblab.ui.helper.CircleBitmapDisplayer;
 
 import java.io.File;
 import java.util.HashMap;
