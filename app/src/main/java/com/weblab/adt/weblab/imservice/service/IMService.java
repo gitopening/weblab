@@ -2,6 +2,7 @@ package com.weblab.adt.weblab.imservice.service;
 
 import android.app.Notification;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
@@ -86,6 +87,22 @@ public class IMService extends Service {
 
     public LoginSp getLoginSp() {
         return loginSp;
+    }
+
+
+    // 负责初始化 每个manager
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        logger.i("IMService onStartCommand");
+        //应用开启初始化 下面这几个怎么释放 todo
+        //当第一次运行程序时，从IMApplication过来后，第二个执行这里
+        Context ctx = getApplicationContext();
+        loginSp.init(ctx);
+        // 放在这里还有些问题 todo
+        socketMgr.onStartIMManager(ctx);
+        loginMgr.onStartIMManager(ctx);
+
+        return START_STICKY;
     }
 
 }

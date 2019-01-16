@@ -1,5 +1,7 @@
 package com.weblab.adt.weblab.imservice.manager;
 
+import android.text.TextUtils;
+
 import com.weblab.adt.weblab.DB.entity.UserEntity;
 import com.weblab.adt.weblab.DB.sp.LoginSp;
 import com.weblab.adt.weblab.imservice.event.LoginEvent;
@@ -165,26 +167,26 @@ public class IMLoginManager extends IMManager {
 //        // 开始请求网络
 //        imSocketManager.reqMsgServerAddrs();
 //    }
-//
-//
-//    public void login(String userName, String password) {
-//        logger.i("login#login -> userName:%s", userName);
-//
-//        //test 使用
-//        LoginSp.SpLoginIdentity identity = LoginSp.instance().getLoginIdentity();
+
+
+    public void login(String userName, String password) {
+        logger.i("login#login -> userName:%s", userName);
+
+        //test 使用
+        LoginSp.SpLoginIdentity identity = LoginSp.instance().getLoginIdentity();
 //        if(identity !=null && !TextUtils.isEmpty(identity.getPwd())) {
 //            if (identity.getPwd().equals(password) && identity.getLoginName().equals(userName)) {
 //                login(identity);
 //                return;
 //            }
 //        }
-//        //test end
-//        loginUserName = userName;
-//        loginPwd = password;
-//        identityChanged = true;
-//        imSocketManager.reqMsgServerAddrs();
-//    }
-//
+        //test end
+        loginUserName = userName;
+        loginPwd = password;
+        identityChanged = true;
+        imSocketManager.reqMsgServerAddrs();
+    }
+
 //    /**
 //     * 链接成功之后
 //     * */
