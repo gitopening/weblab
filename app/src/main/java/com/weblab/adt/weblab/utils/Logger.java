@@ -53,7 +53,8 @@ public class Logger {
                 continue;
             }
 
-            return "[" + st.getFileName() + ":" + st.getLineNumber() + "]";
+//            return "[" + st.getFileName() + ":" + st.getLineNumber() + "]";
+            return "[" + st.getFileName() + ":" + st.getLineNumber()+ ":" + st.getMethodName() + "]";
         }
 
         return null;
