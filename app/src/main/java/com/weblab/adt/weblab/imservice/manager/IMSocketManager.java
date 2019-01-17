@@ -6,6 +6,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.BaseJsonHttpResponseHandler;
 import com.weblab.adt.weblab.DB.sp.SystemConfigSp;
 import com.weblab.adt.weblab.imservice.event.SocketEvent;
+import com.weblab.adt.weblab.imservice.network.SocketThread;
 import com.weblab.adt.weblab.utils.Logger;
 import org.apache.http.Header;
 
@@ -42,7 +43,7 @@ public class IMSocketManager extends IMManager {
     /**快速重新连接的时候需要*/
     private  MsgServerAddrsEntity currentMsgAddress = null;
     /**底层socket*/
-//    private SocketThread msgServerThread;
+    private SocketThread msgServerThread;
 
 
     @Override
@@ -126,10 +127,10 @@ public class IMSocketManager extends IMManager {
         logger.i("login#connectMsgServer -> (%s:%d)",priorIP, port);
 
         //check again,may be unimportance
-//        if (msgServerThread != null) {
-//            msgServerThread.close();
-//            msgServerThread = null;
-//        }
+        if (msgServerThread != null) {
+            msgServerThread.close();
+            msgServerThread = null;
+        }
 //
 //        msgServerThread = new SocketThread(priorIP, port,new MsgServerHandler());
 //        msgServerThread.start();
