@@ -2,14 +2,25 @@ package com.weblab.adt.weblab.imservice.manager;
 
 import android.text.TextUtils;
 
+import com.google.protobuf.CodedInputStream;
+import com.google.protobuf.GeneratedMessageLite;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.BaseJsonHttpResponseHandler;
 import com.weblab.adt.weblab.DB.sp.SystemConfigSp;
+import com.weblab.adt.weblab.config.SysConstant;
+import com.weblab.adt.weblab.imservice.callback.ListenerQueue;
+import com.weblab.adt.weblab.imservice.callback.Packetlistener;
 import com.weblab.adt.weblab.imservice.event.SocketEvent;
+import com.weblab.adt.weblab.imservice.network.MsgServerHandler;
 import com.weblab.adt.weblab.imservice.network.SocketThread;
+import com.weblab.adt.weblab.protobuf.IMBaseDefine;
+import com.weblab.adt.weblab.protobuf.base.DataBuffer;
+import com.weblab.adt.weblab.protobuf.base.DefaultHeader;
 import com.weblab.adt.weblab.utils.Logger;
-import org.apache.http.Header;
+import com.weblab.adt.weblab.protobuf.base.Header;
 
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBufferInputStream;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -45,6 +56,8 @@ public class IMSocketManager extends IMManager {
     /**底层socket*/
     private SocketThread msgServerThread;
 
+    private ListenerQueue listenerQueue = ListenerQueue.instance();
+
 
     @Override
     public void doOnStart() {
@@ -70,7 +83,7 @@ public class IMSocketManager extends IMManager {
         client.setUserAgent("Android-TT");
         client.get(SystemConfigSp.instance().getStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER), new BaseJsonHttpResponseHandler(){
             @Override
-            public void onSuccess(int i, Header[] headers, String s, Object o) {
+            public void onSuccess(int i, org.apache.http.Header[] headers, String s, Object o) {
                 logger.d("socket#req msgAddress onSuccess, response:%s", s);
                 MsgServerAddrsEntity msgServer = (MsgServerAddrsEntity) o;
                 if(msgServer == null){
@@ -82,7 +95,7 @@ public class IMSocketManager extends IMManager {
             }
 
             @Override
-            public void onFailure(int i, Header[] headers, Throwable throwable, String responseString, Object o) {
+            public void onFailure(int i, org.apache.http.Header[] headers, Throwable throwable, String responseString, Object o) {
                 logger.d("socket#req msgAddress Failure, errorResponse:%s", responseString);
                 triggerEvent(SocketEvent.REQ_MSG_SERVER_ADDRS_FAILED);
             }
@@ -131,9 +144,9 @@ public class IMSocketManager extends IMManager {
             msgServerThread.close();
             msgServerThread = null;
         }
-//
-//        msgServerThread = new SocketThread(priorIP, port,new MsgServerHandler());
-//        msgServerThread.start();
+
+        msgServerThread = new SocketThread(priorIP, port,new MsgServerHandler());
+        msgServerThread.start();
     }
 
     /**----------------------------请求Msg server地址--实体信息--------------------------------------*/
@@ -208,5 +221,78 @@ public class IMSocketManager extends IMManager {
         addrsEntity.port = port;
         logger.d("login#got loginserverAddrsEntity:%s", addrsEntity);
         return addrsEntity;
+    }
+
+    /**
+     * 通道连接成功
+     */
+    public void onMsgServerConnected() {
+        logger.i("login#onMsgServerConnected");
+//        listenerQueue.onStart();
+//        triggerEvent(SocketEvent.CONNECT_MSG_SERVER_SUCCESS); //这个广播 目前没用上
+        //通道连接成功之后，开始请求登录
+        IMLoginManager.instance().reqLoginMsgServer();
+    }
+
+    /**
+     * todo check exception
+     * */
+    public void sendRequest(GeneratedMessageLite requset, int sid, int cid, Packetlistener packetlistener){
+        int seqNo = 0;
+        try{
+            //组装包头 header
+            com.weblab.adt.weblab.protobuf.base.Header header = new DefaultHeader(sid, cid);
+            int bodySize = requset.getSerializedSize();
+            header.setLength(SysConstant.PROTOCOL_HEADER_LENGTH + bodySize);
+            seqNo = header.getSeqnum();
+            listenerQueue.push(seqNo,packetlistener);
+            boolean sendRes = msgServerThread.sendRequest(requset,header);
+        }catch (Exception e){
+            if(packetlistener !=null){
+                packetlistener.onFaild();
+            }
+            listenerQueue.pop(seqNo);
+            logger.e("#sendRequest#channel is close!");
+        }
+    }
+
+    public void packetDispatch(ChannelBuffer channelBuffer){
+        DataBuffer buffer = new DataBuffer(channelBuffer);
+        com.weblab.adt.weblab.protobuf.base.Header header = new com.weblab.adt.weblab.protobuf.base.Header();
+        header.decode(buffer);
+        /**buffer 的指针位于body的地方*/
+        int commandId = header.getCommandId();
+        int serviceId = header.getServiceId();
+        int seqNo = header.getSeqnum();
+        logger.d("dispatch packet, serviceId:%d, commandId:%d", serviceId,
+                commandId);
+        CodedInputStream codedInputStream = CodedInputStream.newInstance(new ChannelBufferInputStream(buffer.getOrignalBuffer()));
+
+        Packetlistener listener = listenerQueue.pop(seqNo);
+        if(listener!=null){
+            listener.onSuccess(codedInputStream);
+            return;
+        }
+
+        // todo eric make it a table
+        // 抽象 父类执行
+//        switch (serviceId){
+//            case IMBaseDefine.ServiceID.SID_LOGIN_VALUE:
+//                IMPacketDispatcher.loginPacketDispatcher(commandId,codedInputStream);
+//                break;
+//            case IMBaseDefine.ServiceID.SID_BUDDY_LIST_VALUE:
+//                IMPacketDispatcher.buddyPacketDispatcher(commandId,codedInputStream);
+//                break;
+//            case IMBaseDefine.ServiceID.SID_MSG_VALUE:
+//                IMPacketDispatcher.msgPacketDispatcher(commandId,codedInputStream);
+//                break;
+//            case IMBaseDefine.ServiceID.SID_GROUP_VALUE:
+//                IMPacketDispatcher.groupPacketDispatcher(commandId,codedInputStream);
+//                break;
+//            default:
+//                logger.e("packet#unhandled serviceId:%d, commandId:%d", serviceId,
+//                        commandId);
+//                break;
+//        }
     }
 }

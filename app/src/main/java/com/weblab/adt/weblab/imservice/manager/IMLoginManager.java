@@ -2,10 +2,18 @@ package com.weblab.adt.weblab.imservice.manager;
 
 import android.text.TextUtils;
 
+import com.google.protobuf.CodedInputStream;
 import com.weblab.adt.weblab.DB.entity.UserEntity;
 import com.weblab.adt.weblab.DB.sp.LoginSp;
+import com.weblab.adt.weblab.Security;
+import com.weblab.adt.weblab.imservice.callback.Packetlistener;
 import com.weblab.adt.weblab.imservice.event.LoginEvent;
+import com.weblab.adt.weblab.protobuf.IMBaseDefine;
+import com.weblab.adt.weblab.protobuf.IMLogin;
+import com.weblab.adt.weblab.protobuf.helper.ProtoBuf2JavaBean;
 import com.weblab.adt.weblab.utils.Logger;
+
+import java.io.IOException;
 
 import de.greenrobot.event.EventBus;
 
@@ -187,84 +195,85 @@ public class IMLoginManager extends IMManager {
         imSocketManager.reqMsgServerAddrs();
     }
 
-//    /**
-//     * 链接成功之后
-//     * */
-//    public void reqLoginMsgServer() {
-//        logger.i("login#reqLoginMsgServer");
-//        triggerEvent(LoginEvent.LOGINING);
-//        /** 加密 */
-//        String desPwd = new String(com.mogujie.tt.Security.getInstance().EncryptPass(loginPwd));
-//
-//        IMLogin.IMLoginReq imLoginReq = IMLogin.IMLoginReq.newBuilder()
-//                    .setUserName(loginUserName)
-//                    .setPassword(desPwd)
-//                    .setOnlineStatus(IMBaseDefine.UserStatType.USER_STATUS_ONLINE)
-//                    .setClientType(IMBaseDefine.ClientType.CLIENT_TYPE_ANDROID)
-//                    .setClientVersion("1.0.0").build();
-//
-//       int sid = IMBaseDefine.ServiceID.SID_LOGIN_VALUE;
-//       int cid = IMBaseDefine.LoginCmdID.CID_LOGIN_REQ_USERLOGIN_VALUE;
-//       imSocketManager.sendRequest(imLoginReq,sid,cid,new Packetlistener() {
-//           @Override
-//           public void onSuccess(Object response) {
-//               try {
-//                   IMLogin.IMLoginRes  imLoginRes = IMLogin.IMLoginRes.parseFrom((CodedInputStream)response);
-//                   onRepMsgServerLogin(imLoginRes);
-//               } catch (IOException e) {
-//                   triggerEvent(LoginEvent.LOGIN_INNER_FAILED);
-//                   logger.e("login failed,cause by %s",e.getCause());
-//               }
-//           }
-//
-//           @Override
-//           public void onFaild() {
-//               triggerEvent(LoginEvent.LOGIN_INNER_FAILED);
-//           }
-//
-//           @Override
-//           public void onTimeout() {
-//               triggerEvent(LoginEvent.LOGIN_INNER_FAILED);
-//           }
-//       });
-//    }
-//
-//    /**
-//     * 验证登陆信息结果
-//     * @param loginRes
-//     */
-//    public void onRepMsgServerLogin(IMLogin.IMLoginRes loginRes) {
-//        logger.i("login#onRepMsgServerLogin");
-//
-//        if (loginRes == null) {
-//            logger.e("login#decode LoginResponse failed");
-//            triggerEvent(LoginEvent.LOGIN_AUTH_FAILED);
-//            return;
-//        }
-//
-//        IMBaseDefine.ResultType  code = loginRes.getResultCode();
-//        switch (code){
-//            case REFUSE_REASON_NONE:{
-//                //登录成功，服务器返回的数据格式
-//                //{id=null, peerId=15, gender=1, mainName='1005', pinyinName='#', realName='1005', avatar='http://msfs.xiaominfc.com/g0/000/000/1510745671617608_139781395625.jpg', phone='', email='', departmentId=1, status=0, created=1545055405, updated=1545055405, pinyinElement=PinYinElement [pinyin=#1005, firstChars=1005]tokenPinyinList:1,0,0,5,, searchElement=SearchElement [startIndex=-1, endIndex=-1]}
-//                IMBaseDefine.UserStatType userStatType = loginRes.getOnlineStatus();
-//                IMBaseDefine.UserInfo userInfo =  loginRes.getUserInfo();
-//                loginId = userInfo.getUserId();
-//                loginInfo = ProtoBuf2JavaBean.getUserEntity(userInfo);
-//                onLoginOk();
-//            }break;
-//
-//            case REFUSE_REASON_DB_VALIDATE_FAILED:{
-//                logger.e("login#login msg server failed, result:%s", code);
-//                triggerEvent(LoginEvent.LOGIN_AUTH_FAILED);
-//            }break;
-//
-//            default:{
-//                logger.e("login#login msg server inner failed, result:%s", code);
-//                triggerEvent(LoginEvent.LOGIN_INNER_FAILED);
-//            }break;
-//        }
-//    }
+    /**
+     * 链接成功之后
+     * */
+    public void reqLoginMsgServer() {
+        logger.i("login#reqLoginMsgServer");
+        triggerEvent(LoginEvent.LOGINING);
+        /** 加密 */
+//        String desPwd = new String(Security.getInstance().EncryptPass(loginPwd));
+        String desPwd = loginPwd;
+
+        IMLogin.IMLoginReq imLoginReq = IMLogin.IMLoginReq.newBuilder()
+                    .setUserName(loginUserName)
+                    .setPassword(desPwd)
+                    .setOnlineStatus(IMBaseDefine.UserStatType.USER_STATUS_ONLINE)
+                    .setClientType(IMBaseDefine.ClientType.CLIENT_TYPE_ANDROID)
+                    .setClientVersion("1.0.0").build();
+
+       int sid = IMBaseDefine.ServiceID.SID_LOGIN_VALUE;
+       int cid = IMBaseDefine.LoginCmdID.CID_LOGIN_REQ_USERLOGIN_VALUE;
+       imSocketManager.sendRequest(imLoginReq,sid,cid,new Packetlistener() {
+           @Override
+           public void onSuccess(Object response) {
+               try {
+                   IMLogin.IMLoginRes  imLoginRes = IMLogin.IMLoginRes.parseFrom((CodedInputStream)response);
+                   onRepMsgServerLogin(imLoginRes);
+               } catch (IOException e) {
+                   triggerEvent(LoginEvent.LOGIN_INNER_FAILED);
+                   logger.e("login failed,cause by %s",e.getCause());
+               }
+           }
+
+           @Override
+           public void onFaild() {
+               triggerEvent(LoginEvent.LOGIN_INNER_FAILED);
+           }
+
+           @Override
+           public void onTimeout() {
+               triggerEvent(LoginEvent.LOGIN_INNER_FAILED);
+           }
+       });
+    }
+
+    /**
+     * 验证登陆信息结果
+     * @param loginRes
+     */
+    public void onRepMsgServerLogin(IMLogin.IMLoginRes loginRes) {
+        logger.i("login#onRepMsgServerLogin");
+
+        if (loginRes == null) {
+            logger.e("login#decode LoginResponse failed");
+            triggerEvent(LoginEvent.LOGIN_AUTH_FAILED);
+            return;
+        }
+
+        IMBaseDefine.ResultType  code = loginRes.getResultCode();
+        switch (code){
+            case REFUSE_REASON_NONE:{
+                //登录成功，服务器返回的数据格式
+                //{id=null, peerId=15, gender=1, mainName='1005', pinyinName='#', realName='1005', avatar='http://msfs.xiaominfc.com/g0/000/000/1510745671617608_139781395625.jpg', phone='', email='', departmentId=1, status=0, created=1545055405, updated=1545055405, pinyinElement=PinYinElement [pinyin=#1005, firstChars=1005]tokenPinyinList:1,0,0,5,, searchElement=SearchElement [startIndex=-1, endIndex=-1]}
+                IMBaseDefine.UserStatType userStatType = loginRes.getOnlineStatus();
+                IMBaseDefine.UserInfo userInfo =  loginRes.getUserInfo();
+                loginId = userInfo.getUserId();
+                loginInfo = ProtoBuf2JavaBean.getUserEntity(userInfo);
+                onLoginOk();
+            }break;
+
+            case REFUSE_REASON_DB_VALIDATE_FAILED:{
+                logger.e("login#login msg server failed, result:%s", code);
+                triggerEvent(LoginEvent.LOGIN_AUTH_FAILED);
+            }break;
+
+            default:{
+                logger.e("login#login msg server inner failed, result:%s", code);
+                triggerEvent(LoginEvent.LOGIN_INNER_FAILED);
+            }break;
+        }
+    }
 
     public void onLoginOk() {
         logger.i("login#onLoginOk");
