@@ -153,6 +153,7 @@ public class SocketThread extends Thread {
             if(!(isW && isC)){
                 throw  new RuntimeException("#sendRequest#channel is close!");
             }
+            //到这里是真正的请求发送完成
             channelFuture.getChannel().write(buffer.getOrignalBuffer());
             logger.d("packet#send ok");
             return true;
