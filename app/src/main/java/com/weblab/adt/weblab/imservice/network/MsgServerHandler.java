@@ -40,6 +40,12 @@ public class MsgServerHandler extends SimpleChannelHandler {
         //IMReconnectManager.instance().tryReconnect();
 	}
 
+	/**
+	 * 通道接收到服务器返回的信息
+	 * @param ctx
+	 * @param e
+	 * @throws Exception
+	 */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e)
 			throws Exception {
