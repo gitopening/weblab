@@ -31,6 +31,7 @@ import com.weblab.adt.weblab.imservice.manager.IMLoginManager;
 import com.weblab.adt.weblab.imservice.service.IMService;
 import com.weblab.adt.weblab.imservice.support.IMServiceConnector;
 import com.weblab.adt.weblab.ui.base.TTBaseActivity;
+import com.weblab.adt.weblab.utils.IMUIHelper;
 import com.weblab.adt.weblab.utils.Logger;
 
 import de.greenrobot.event.EventBus;
@@ -413,7 +414,7 @@ public class LoginActivity extends TTBaseActivity {
             case CONNECT_MSG_SERVER_FAILED:
             case REQ_MSG_SERVER_ADDRS_FAILED:
                 if (!loginSuccess)
-//                    onSocketFailure(event);
+                    onSocketFailure(event);
                 break;
         }
     }
@@ -435,13 +436,13 @@ public class LoginActivity extends TTBaseActivity {
 //        mLoginStatusView.setVisibility(View.GONE);
 //        Toast.makeText(this, errorTip, Toast.LENGTH_SHORT).show();
 //    }
-//
-//    private void onSocketFailure(SocketEvent event) {
-//        logger.e("login#onLoginError -> errorCode:%s,", event.name());
-//        showLoginPage();
-//        String errorTip = getString(IMUIHelper.getSocketErrorTip(event));
-//        logger.d("login#errorTip:%s", errorTip);
-//        mLoginStatusView.setVisibility(View.GONE);
-//        Toast.makeText(this, errorTip, Toast.LENGTH_SHORT).show();
-//    }
+
+    private void onSocketFailure(SocketEvent event) {
+        logger.e("login#onLoginError -> errorCode:%s,", event.name());
+        showLoginPage();
+        String errorTip = getString(IMUIHelper.getSocketErrorTip(event));
+        logger.d("login#errorTip:%s", errorTip);
+        mLoginStatusView.setVisibility(View.GONE);
+        Toast.makeText(this, errorTip, Toast.LENGTH_SHORT).show();
+    }
 }
