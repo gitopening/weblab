@@ -47,8 +47,8 @@ public class MsgServerHandler extends SimpleChannelHandler {
         logger.d("channel#messageReceived");
         // 重置AlarmManager的时间
         ChannelBuffer channelBuffer = (ChannelBuffer) e.getMessage();
-//        if(null!=channelBuffer)
-//            IMSocketManager.instance().packetDispatch(channelBuffer);
+        if(null!=channelBuffer)
+            IMSocketManager.instance().packetDispatch(channelBuffer);
 	}
 
     /**
