@@ -54,7 +54,7 @@ public class Logger {
             }
 
 //            return "[" + st.getFileName() + ":" + st.getLineNumber() + "]";
-            return "[" + st.getFileName() + ":" + st.getLineNumber()+ ":" + st.getMethodName() + "]";
+            return "[" + st.getFileName() + ":-" + st.getLineNumber()+ ":-" + st.getMethodName() + "]";
         }
 
         return null;
