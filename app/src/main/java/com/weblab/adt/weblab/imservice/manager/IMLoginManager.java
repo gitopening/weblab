@@ -178,7 +178,7 @@ public class IMLoginManager extends IMManager {
 
 
     public void login(String userName, String password) {
-        logger.i("login#login -> userName:%s", userName);
+        logger.i("login#login 用户名和密码传入这里，给本类中的全局变量辅助，但是真正的登录不是这里 -> userName:%s", userName);
 
         //test 使用
         LoginSp.SpLoginIdentity identity = LoginSp.instance().getLoginIdentity();
@@ -199,7 +199,7 @@ public class IMLoginManager extends IMManager {
      * 链接成功之后
      * */
     public void reqLoginMsgServer() {
-        logger.i("login#reqLoginMsgServer");
+        logger.i("login#reqLoginMsgServer通道连接成功，开始登录请求");
         triggerEvent(LoginEvent.LOGINING);
         /** 加密 */
 //        String desPwd = new String(Security.getInstance().EncryptPass(loginPwd));
@@ -217,6 +217,7 @@ public class IMLoginManager extends IMManager {
        imSocketManager.sendRequest(imLoginReq,sid,cid,new Packetlistener() {
            @Override
            public void onSuccess(Object response) {
+               logger.d("login#通道 中收到服务器回写的信息，后对数据进行封装转发，转发到了这里");
                try {
                    IMLogin.IMLoginRes  imLoginRes = IMLogin.IMLoginRes.parseFrom((CodedInputStream)response);
                    onRepMsgServerLogin(imLoginRes);
@@ -243,7 +244,7 @@ public class IMLoginManager extends IMManager {
      * @param loginRes
      */
     public void onRepMsgServerLogin(IMLogin.IMLoginRes loginRes) {
-        logger.i("login#onRepMsgServerLogin");
+        logger.i("login#验证登陆信息结果");
 
         if (loginRes == null) {
             logger.e("login#decode LoginResponse failed");
@@ -276,10 +277,9 @@ public class IMLoginManager extends IMManager {
     }
 
     public void onLoginOk() {
-        logger.i("login#onLoginOk");
+        logger.i("login#onLoginOk，用户名密码验证成功。开始发送处理的广播");
         everLogined = true;
         isKickout = false;
-
         // 判断登陆的类型
         if(isLocalLogin){
             triggerEvent(LoginEvent.LOCAL_LOGIN_MSG_SERVICE);

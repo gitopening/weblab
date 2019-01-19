@@ -79,12 +79,12 @@ public class IMSocketManager extends IMManager {
      5.将认证结果返回给客户端
      */
     public void reqMsgServerAddrs() {
-        logger.d("socket#reqMsgServerAddrs.");
+        logger.d("socket#.http请求用代码中的服务器地址，去请求服务器");
         client.setUserAgent("Android-TT");
         client.get(SystemConfigSp.instance().getStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER), new BaseJsonHttpResponseHandler(){
             @Override
             public void onSuccess(int i, org.apache.http.Header[] headers, String s, Object o) {
-                logger.d("socket#req msgAddress onSuccess, response:%s", s);
+                logger.d("socket#服务器地址 req msgAddress onSuccess, response:%s", s);
                 MsgServerAddrsEntity msgServer = (MsgServerAddrsEntity) o;
                 if(msgServer == null){
                     triggerEvent(SocketEvent.REQ_MSG_SERVER_ADDRS_FAILED);
@@ -137,7 +137,7 @@ public class IMSocketManager extends IMManager {
 
         String priorIP = currentMsgAddress.priorIP;
         int port = currentMsgAddress.port;
-        logger.i("login#connectMsgServer -> (%s:%d)",priorIP, port);
+        logger.i("login#用从服务器返回的地址和端口，组装socket请求connectMsgServer -> (%s:%d)",priorIP, port);
 
         //check again,may be unimportance
         if (msgServerThread != null) {
@@ -227,7 +227,7 @@ public class IMSocketManager extends IMManager {
      * 通道连接成功
      */
     public void onMsgServerConnected() {
-        logger.i("login#onMsgServerConnected");
+        logger.i("login#通道连接成功之后，开始请求登录");
 //        listenerQueue.onStart();
 //        triggerEvent(SocketEvent.CONNECT_MSG_SERVER_SUCCESS); //这个广播 目前没用上
         //通道连接成功之后，开始请求登录
@@ -239,6 +239,7 @@ public class IMSocketManager extends IMManager {
      * */
     public void sendRequest(GeneratedMessageLite requset, int sid, int cid, Packetlistener packetlistener){
         int seqNo = 0;
+        logger.i("login#r通道连接成功，IMSocketManager组装请求信息");
         try{
             //组装包头 header
             com.weblab.adt.weblab.protobuf.base.Header header = new DefaultHeader(sid, cid);
@@ -257,6 +258,7 @@ public class IMSocketManager extends IMManager {
     }
 
     public void packetDispatch(ChannelBuffer channelBuffer){
+        logger.d("IMSocketManager#通道 中收到服务器回写的信息，后对数据进行封装转发");
         DataBuffer buffer = new DataBuffer(channelBuffer);
         com.weblab.adt.weblab.protobuf.base.Header header = new com.weblab.adt.weblab.protobuf.base.Header();
         header.decode(buffer);

@@ -48,7 +48,7 @@ public class SocketThread extends Thread {
         channelFactory = new NioClientSocketChannelFactory(
                 Executors.newSingleThreadExecutor(),
                 Executors.newSingleThreadExecutor());
-
+        logger.d("login#SocketThread:初始化");
         clientBootstrap = new ClientBootstrap(channelFactory);
         clientBootstrap.setOption("connectTimeoutMillis", 5000);
         clientBootstrap.setPipelineFactory(new ChannelPipelineFactory() {
@@ -76,6 +76,7 @@ public class SocketThread extends Thread {
     }
 
     public boolean doConnect() {
+        logger.d("login#SocketThread:开始连接通道");
         try {
             if ((null == channel || (null != channel && !channel.isConnected()))
                     && null != this.strHost && this.nPort > 0) {
@@ -153,6 +154,7 @@ public class SocketThread extends Thread {
             if(!(isW && isC)){
                 throw  new RuntimeException("#sendRequest#channel is close!");
             }
+            logger.d("SocketThread#通道真正的开始往通道输入信息");
             //到这里是真正的请求发送完成
             channelFuture.getChannel().write(buffer.getOrignalBuffer());
             logger.d("packet#send ok");

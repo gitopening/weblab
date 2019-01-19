@@ -18,7 +18,7 @@ public class MsgServerHandler extends SimpleChannelHandler {
 	public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e)
 			throws Exception {
 		super.channelConnected(ctx, e);
-        logger.d("channel#channelConnected");
+		logger.d("channel#通道连接成功的回调监听在这里，开始准备请求登录");
         IMSocketManager.instance().onMsgServerConnected();
 	}
 
@@ -50,7 +50,7 @@ public class MsgServerHandler extends SimpleChannelHandler {
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e)
 			throws Exception {
 		super.messageReceived(ctx, e);
-        logger.d("channel#messageReceived");
+        logger.d("channel#通道 中收到服务器回写的信息");
         // 重置AlarmManager的时间
         ChannelBuffer channelBuffer = (ChannelBuffer) e.getMessage();
         if(null!=channelBuffer)
