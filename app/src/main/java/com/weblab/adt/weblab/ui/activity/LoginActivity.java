@@ -22,10 +22,10 @@ import android.widget.Toast;
 
 import com.weblab.adt.weblab.DB.sp.LoginSp;
 import com.weblab.adt.weblab.DB.sp.SystemConfigSp;
-import com.weblab.adt.weblab.MainActivity;
 import com.weblab.adt.weblab.R;
 import com.weblab.adt.weblab.config.IntentConstant;
 import com.weblab.adt.weblab.config.UrlConstant;
+import com.weblab.adt.weblab.imservice.event.LoginEvent;
 import com.weblab.adt.weblab.imservice.event.SocketEvent;
 import com.weblab.adt.weblab.imservice.manager.IMLoginManager;
 import com.weblab.adt.weblab.imservice.service.IMService;
@@ -58,6 +58,7 @@ public class LoginActivity extends TTBaseActivity {
     private View mLoginStatusView;
     private TextView mSwitchLoginServer,sign_switch_login_server_vs,
             sign_switch_login_server_cs,sign_switch_login_server_qq,
+            sign_switch_login_server_192,
             dialog_tip;
     private InputMethodManager intputManager;
 
@@ -178,6 +179,7 @@ public class LoginActivity extends TTBaseActivity {
         sign_switch_login_server_cs = (TextView)findViewById(R.id.sign_switch_login_server_cs);
         sign_switch_login_server_qq = (TextView)findViewById(R.id.sign_switch_login_server_qq);
         sign_switch_login_server_vs = (TextView)findViewById(R.id.sign_switch_login_server_vs);
+        sign_switch_login_server_192 = (TextView)findViewById(R.id.sign_switch_login_server_192);
         mSwitchLoginServer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -257,6 +259,15 @@ public class LoginActivity extends TTBaseActivity {
                 mNameView.setText("101");
                 mPasswordView.setText("不为空就好");
                 SystemConfigSp.instance().setStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER, sign_switch_login_server_vs.getText().toString().trim());
+            }
+        });
+        sign_switch_login_server_192.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Virtual Machines 自己虚拟机服务器地址
+                mNameView.setText("101");
+                mPasswordView.setText("不为空就好");
+                SystemConfigSp.instance().setStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER, sign_switch_login_server_192.getText().toString().trim());
             }
         });
         initAutoLogin();
@@ -393,20 +404,20 @@ public class LoginActivity extends TTBaseActivity {
     /**
      * ----------------------------event 事件驱动----------------------------
      */
-//    public void onEventMainThread(LoginEvent event) {
-//        switch (event) {
-//            case LOCAL_LOGIN_SUCCESS:
-//            case LOGIN_OK:
-//                //接收到登录成功的广播
-//                onLoginSuccess();
-//                break;
-//            case LOGIN_AUTH_FAILED:
-//            case LOGIN_INNER_FAILED:
-//                if (!loginSuccess)
+    public void onEventMainThread(LoginEvent event) {
+        switch (event) {
+            case LOCAL_LOGIN_SUCCESS:
+            case LOGIN_OK:
+                //接收到登录成功的广播
+                onLoginSuccess();
+                break;
+            case LOGIN_AUTH_FAILED:
+            case LOGIN_INNER_FAILED:
+                if (!loginSuccess)
 //                    onLoginFailure(event);
-//                break;
-//        }
-//    }
+                break;
+        }
+    }
 
 
     public void onEventMainThread(SocketEvent event) {
