@@ -4,33 +4,33 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <fragment
-        android:id="@+id/fragment_chat"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        class="com.mogujie.tt.ui.fragment.ChatFragment" />
+    <!--<fragment-->
+        <!--android:id="@+id/fragment_chat"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="1"-->
+        <!--class="com.weblab.adt.weblab.ui.fragment.ChatFragment" />-->
 
-    <fragment
-        android:id="@+id/fragment_contact"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        class="com.mogujie.tt.ui.fragment.ContactFragment" />
+    <!--<fragment-->
+        <!--android:id="@+id/fragment_contact"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="1"-->
+        <!--class="com.weblab.adt.weblab.ui.fragment.ContactFragment" />-->
 
-     <fragment
-        android:id="@+id/fragment_internal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        class="com.mogujie.tt.ui.fragment.InternalFragment" />
+     <!--<fragment-->
+        <!--android:id="@+id/fragment_internal"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="1"-->
+        <!--class="com.weblab.adt.weblab.ui.fragment.InternalFragment" />-->
 
-    <fragment
-        android:id="@+id/fragment_my"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        class="com.mogujie.tt.ui.fragment.MyFragment" />
+    <!--<fragment-->
+        <!--android:id="@+id/fragment_my"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="1"-->
+        <!--class="com.weblab.adt.weblab.ui.fragment.MyFragment" />-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,25 +41,25 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp">
 
-        <com.mogujie.tt.ui.widget.NaviTabButton
+        <com.weblab.adt.weblab.ui.widget.NaviTabButton
             android:id="@+id/tabbutton_chat"
             android:layout_width="0dip"
             android:layout_height="fill_parent"
             android:layout_weight="1" />
 
-        <com.mogujie.tt.ui.widget.NaviTabButton
+        <com.weblab.adt.weblab.ui.widget.NaviTabButton
             android:id="@+id/tabbutton_contact"
             android:layout_width="0dip"
             android:layout_height="fill_parent"
             android:layout_weight="1" />
 
-        <com.mogujie.tt.ui.widget.NaviTabButton
+        <com.weblab.adt.weblab.ui.widget.NaviTabButton
             android:id="@+id/tabbutton_internal"
             android:layout_width="0dip"
             android:layout_height="fill_parent"
             android:layout_weight="1" />
 
-        <com.mogujie.tt.ui.widget.NaviTabButton
+        <com.weblab.adt.weblab.ui.widget.NaviTabButton
             android:id="@+id/tabbutton_my"
             android:layout_width="0dip"
             android:layout_height="fill_parent"
