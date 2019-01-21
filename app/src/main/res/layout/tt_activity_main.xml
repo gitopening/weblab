@@ -18,19 +18,19 @@
         <!--android:layout_weight="1"-->
         <!--class="com.weblab.adt.weblab.ui.fragment.ContactFragment" />-->
 
-     <fragment
-        android:id="@+id/fragment_internal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        class="com.weblab.adt.weblab.ui.fragment.InternalFragment" />
-
-    <!--<fragment-->
-        <!--android:id="@+id/fragment_my"-->
+     <!--<fragment-->
+        <!--android:id="@+id/fragment_internal"-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->
         <!--android:layout_weight="1"-->
-        <!--class="com.weblab.adt.weblab.ui.fragment.MyFragment" />-->
+        <!--class="com.weblab.adt.weblab.ui.fragment.InternalFragment" />-->
+
+    <fragment
+        android:id="@+id/fragment_my"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        class="com.weblab.adt.weblab.ui.fragment.MyFragment" />
 
     <LinearLayout
         android:layout_width="match_parent"

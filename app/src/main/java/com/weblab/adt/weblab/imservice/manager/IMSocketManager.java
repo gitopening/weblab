@@ -234,6 +234,11 @@ public class IMSocketManager extends IMManager {
         IMLoginManager.instance().reqLoginMsgServer();
     }
 
+
+    public void sendRequest(GeneratedMessageLite requset,int sid,int cid){
+        sendRequest(requset,sid,cid,null);
+    }
+
     /**
      * todo check exception
      * */

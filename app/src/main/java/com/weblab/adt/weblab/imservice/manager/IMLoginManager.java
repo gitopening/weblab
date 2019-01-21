@@ -91,33 +91,33 @@ public class IMLoginManager extends IMManager {
      mainactivity jumps to login page
      *
      */
-//    public void logOut() {
-//        logger.d("login#logOut");
-//        logger.d("login#stop reconnecting");
-//        //		everlogined is enough to stop reconnecting
-//        everLogined =  false;
-//        isLocalLogin = false;
-//        reqLoginOut();
-//    }
+    public void logOut() {
+        logger.d("login#logOut");
+        logger.d("login#stop reconnecting");
+        //		everlogined is enough to stop reconnecting
+        everLogined =  false;
+        isLocalLogin = false;
+        reqLoginOut();
+    }
 
     /**
      * 退出登陆
      */
-//    private void reqLoginOut(){
-//        IMLogin.IMLogoutReq imLogoutReq = IMLogin.IMLogoutReq.newBuilder()
-//                .build();
-//        int sid = IMBaseDefine.ServiceID.SID_LOGIN_VALUE;
-//        int cid = IMBaseDefine.LoginCmdID.CID_LOGIN_REQ_LOGINOUT_VALUE;
-//        try {
-//            imSocketManager.sendRequest(imLogoutReq, sid, cid);
-//        }catch (Exception e){
-//            logger.e("#reqLoginOut#sendRequest error,cause by"+e.toString());
-//        }finally {
-//            LoginSp.instance().setLoginInfo(loginUserName,null,loginId);
-//            logger.d("login#send logout finish message");
-//            triggerEvent(LoginEvent.LOGIN_OUT);
-//        }
-//    }
+    private void reqLoginOut(){
+        IMLogin.IMLogoutReq imLogoutReq = IMLogin.IMLogoutReq.newBuilder()
+                .build();
+        int sid = IMBaseDefine.ServiceID.SID_LOGIN_VALUE;
+        int cid = IMBaseDefine.LoginCmdID.CID_LOGIN_REQ_LOGINOUT_VALUE;
+        try {
+            imSocketManager.sendRequest(imLogoutReq, sid, cid);
+        }catch (Exception e){
+            logger.e("#reqLoginOut#sendRequest error,cause by"+e.toString());
+        }finally {
+            LoginSp.instance().setLoginInfo(loginUserName,null,loginId);
+            logger.d("login#send logout finish message");
+            triggerEvent(LoginEvent.LOGIN_OUT);
+        }
+    }
 
     /**
      * 现在这种模式 req与rsp之间没有必然的耦合关系。是不是太松散了

@@ -56,7 +56,7 @@ public class MainActivity extends FragmentActivity{
 		setContentView(R.layout.tt_activity_main);
 
 		initTab();
-//		initFragment();
+		initFragment();
 //		setFragmentIndicator(0);
 	}
 
@@ -78,13 +78,13 @@ public class MainActivity extends FragmentActivity{
 	}
 
 
-//	private void initFragment() {
-//		mFragments = new Fragment[4];
+	private void initFragment() {
+		mFragments = new Fragment[4];
 //		mFragments[0] = getSupportFragmentManager().findFragmentById(R.id.fragment_chat);
 //		mFragments[1] = getSupportFragmentManager().findFragmentById(R.id.fragment_contact);
 //		mFragments[2] = getSupportFragmentManager().findFragmentById(R.id.fragment_internal);
 //		mFragments[3] = getSupportFragmentManager().findFragmentById(R.id.fragment_my);
-//	}
+	}
 
 	private void initTab() {
 		mTabButtons = new NaviTabButton[4];
