@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Intent;
 
 import com.weblab.adt.weblab.imservice.service.IMService;
+import com.weblab.adt.weblab.utils.ImageLoaderUtil;
 import com.weblab.adt.weblab.utils.Logger;
 
 
@@ -26,6 +27,7 @@ public class IMApplication  extends Application {
         super.onCreate();
         logger.i("Application starts");
         startIMService();
+        ImageLoaderUtil.initImageLoaderConfig(getApplicationContext());
     }
 
     private void startIMService() {
