@@ -224,7 +224,7 @@ public class LoginActivity extends TTBaseActivity {
         mNameView = (EditText) findViewById(R.id.name);
         mPasswordView = (EditText) findViewById(R.id.password);
         //便于大家调试，服务器和用户名默认值改成线上他人的
-        mNameView.setText("小赵");
+        mNameView.setText("101");
         mPasswordView.setText("不为空就好");
         mLoginStatusView = findViewById(R.id.login_status);
         findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
@@ -408,6 +408,7 @@ public class LoginActivity extends TTBaseActivity {
         switch (event) {
             case LOCAL_LOGIN_SUCCESS:
             case LOGIN_OK:
+                logger.i("login#接收到用户名密码验证成功广播");
                 //接收到登录成功的广播
                 onLoginSuccess();
                 break;
@@ -432,7 +433,7 @@ public class LoginActivity extends TTBaseActivity {
 
     private void onLoginSuccess() {
         //登录成功跳转到主界面
-        logger.i("login#onLoginSuccess");
+        logger.i("login#onLoginSuccess接收到用户名密码验证成功广播，跳转到主界面");
         loginSuccess = true;
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
