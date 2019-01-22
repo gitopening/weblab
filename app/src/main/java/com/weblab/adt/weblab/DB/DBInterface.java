@@ -4,10 +4,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.weblab.adt.weblab.DB.dao.DaoMaster;
 import com.weblab.adt.weblab.DB.entity.MessageEntity;
 import com.weblab.adt.weblab.DB.entity.SessionEntity;
 import com.weblab.adt.weblab.DB.entity.UserEntity;
 import com.weblab.adt.weblab.config.DBConstant;
+import com.weblab.adt.weblab.imservice.entity.AudioMessage;
+import com.weblab.adt.weblab.imservice.entity.ImageMessage;
+import com.weblab.adt.weblab.imservice.entity.MixMessage;
+import com.weblab.adt.weblab.imservice.entity.TextMessage;
 import com.weblab.adt.weblab.utils.Logger;
 
 import org.json.JSONException;
@@ -31,41 +36,41 @@ import de.greenrobot.dao.query.QueryBuilder;
  *   QueryBuilder.LOG_VALUES = true;
  */
 public class DBInterface {
-//    private Logger logger = Logger.getLogger(DBInterface.class);
-//    private static DBInterface dbInterface = null;
-//    private DaoMaster.DevOpenHelper openHelper;
-//    private Context context = null;
-//    private int  loginUserId =0;
-//
-//    public static DBInterface instance(){
-//        if (dbInterface == null) {
-//            synchronized (DBInterface.class) {
-//                if (dbInterface == null) {
-//                    dbInterface = new DBInterface();
-//                }
-//            }
-//        }
-//        return dbInterface;
-//    }
-//
-//    private DBInterface(){
-//    }
-//
-//    /**
-//     * 上下文环境的更新
-//     * 1. 环境变量的clear
-//     * check
-//     */
-//    public void close() {
-//        if(openHelper !=null) {
-//            openHelper.close();
-//            openHelper = null;
-//            context = null;
-//            loginUserId = 0;
-//        }
-//    }
-//
-//
+    private Logger logger = Logger.getLogger(DBInterface.class);
+    private static DBInterface dbInterface = null;
+    private DaoMaster.DevOpenHelper openHelper;
+    private Context context = null;
+    private int  loginUserId =0;
+
+    public static DBInterface instance(){
+        if (dbInterface == null) {
+            synchronized (DBInterface.class) {
+                if (dbInterface == null) {
+                    dbInterface = new DBInterface();
+                }
+            }
+        }
+        return dbInterface;
+    }
+
+    private DBInterface(){
+    }
+
+    /**
+     * 上下文环境的更新
+     * 1. 环境变量的clear
+     * check
+     */
+    public void close() {
+        if(openHelper !=null) {
+            openHelper.close();
+            openHelper = null;
+            context = null;
+            loginUserId = 0;
+        }
+    }
+
+
 //    public void initDbHelp(Context ctx,int loginId){
 //        if(ctx == null || loginId <=0 ){
 //            throw  new RuntimeException("#DBInterface# init DB exception!");
@@ -103,17 +108,17 @@ public class DBInterface {
 //        DaoSession daoSession = daoMaster.newSession();
 //        return daoSession;
 //    }
-//
-//
-//    private void isInitOk(){
-//        if(openHelper ==null){
-//            logger.e("DBInterface#isInit not success or start,cause by openHelper is null");
-//            // 抛出异常 todo
-//            throw  new RuntimeException("DBInterface#isInit not success or start,cause by openHelper is null");
-//        }
-//    }
-//
-//
+
+
+    private void isInitOk(){
+        if(openHelper ==null){
+            logger.e("DBInterface#isInit not success or start,cause by openHelper is null");
+            // 抛出异常 todo
+            throw  new RuntimeException("DBInterface#isInit not success or start,cause by openHelper is null");
+        }
+    }
+
+
 //    /**-------------------------下面开始department 操作相关---------------------------------------*/
 //    public void  batchInsertOrUpdateDepart(List<DepartmentEntity> entityList){
 //        if(entityList.size() <=0){
@@ -418,60 +423,60 @@ public class DBInterface {
 //                dao.queryBuilder().where(MessageDao.Properties.Id.eq(localId)).unique();
 //        return formatMessage(messageEntity);
 //    }
-//
-//
-//    private MessageEntity formatMessage(MessageEntity msg){
-//         MessageEntity messageEntity = null;
-//            int displayType = msg.getDisplayType();
-//            switch (displayType){
-//                case DBConstant.SHOW_MIX_TEXT:
-//                    try {
-//                        messageEntity =  MixMessage.parseFromDB(msg);
-//                    } catch (JSONException e) {
-//                        logger.e(e.toString());
-//                    }
-//                    break;
-//                case DBConstant.SHOW_AUDIO_TYPE:
-//                    messageEntity = AudioMessage.parseFromDB(msg);
-//                    break;
-//                case DBConstant.SHOW_IMAGE_TYPE:
-//                    messageEntity = ImageMessage.parseFromDB(msg);
-//                    break;
-//                case DBConstant.SHOW_ORIGIN_TEXT_TYPE:
-//                    messageEntity = TextMessage.parseFromDB(msg);
-//                    break;
-//            }
-//        return messageEntity;
-//    }
-//
-//
-//    public List<MessageEntity> formatMessage(List<MessageEntity> msgList){
-//        if(msgList.size() <= 0){
-//            return Collections.emptyList();
-//        }
-//        ArrayList<MessageEntity> newList = new ArrayList<>();
-//        for(MessageEntity info:msgList){
-//            int displayType = info.getDisplayType();
-//            switch (displayType){
-//                case DBConstant.SHOW_MIX_TEXT:
-//                    try {
-//                        newList.add(MixMessage.parseFromDB(info));
-//                    } catch (JSONException e) {
-//                        logger.e(e.toString());
-//                    }
-//                    break;
-//                case DBConstant.SHOW_AUDIO_TYPE:
-//                    newList.add(AudioMessage.parseFromDB(info));
-//                    break;
-//                case DBConstant.SHOW_IMAGE_TYPE:
-//                    newList.add(ImageMessage.parseFromDB(info));
-//                    break;
-//                case DBConstant.SHOW_ORIGIN_TEXT_TYPE:
-//                    newList.add(TextMessage.parseFromDB(info));
-//                    break;
-//            }
-//        }
-//        return newList;
-//    }
+
+
+    private MessageEntity formatMessage(MessageEntity msg){
+         MessageEntity messageEntity = null;
+            int displayType = msg.getDisplayType();
+            switch (displayType){
+                case DBConstant.SHOW_MIX_TEXT:
+                    try {
+                        messageEntity =  MixMessage.parseFromDB(msg);
+                    } catch (JSONException e) {
+                        logger.e(e.toString());
+                    }
+                    break;
+                case DBConstant.SHOW_AUDIO_TYPE:
+                    messageEntity = AudioMessage.parseFromDB(msg);
+                    break;
+                case DBConstant.SHOW_IMAGE_TYPE:
+                    messageEntity = ImageMessage.parseFromDB(msg);
+                    break;
+                case DBConstant.SHOW_ORIGIN_TEXT_TYPE:
+                    messageEntity = TextMessage.parseFromDB(msg);
+                    break;
+            }
+        return messageEntity;
+    }
+
+
+    public List<MessageEntity> formatMessage(List<MessageEntity> msgList){
+        if(msgList.size() <= 0){
+            return Collections.emptyList();
+        }
+        ArrayList<MessageEntity> newList = new ArrayList<>();
+        for(MessageEntity info:msgList){
+            int displayType = info.getDisplayType();
+            switch (displayType){
+                case DBConstant.SHOW_MIX_TEXT:
+                    try {
+                        newList.add(MixMessage.parseFromDB(info));
+                    } catch (JSONException e) {
+                        logger.e(e.toString());
+                    }
+                    break;
+                case DBConstant.SHOW_AUDIO_TYPE:
+                    newList.add(AudioMessage.parseFromDB(info));
+                    break;
+                case DBConstant.SHOW_IMAGE_TYPE:
+                    newList.add(ImageMessage.parseFromDB(info));
+                    break;
+                case DBConstant.SHOW_ORIGIN_TEXT_TYPE:
+                    newList.add(TextMessage.parseFromDB(info));
+                    break;
+            }
+        }
+        return newList;
+    }
 
 }
