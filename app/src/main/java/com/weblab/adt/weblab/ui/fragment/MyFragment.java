@@ -58,6 +58,16 @@ public class MyFragment extends MainFragment {
 //            } else {
 //                init(imService);
 //            }
+            /**
+             * 显示账号信息的判断条件改变一下
+             */
+            UserEntity loginContact = imService.getLoginManager().getLoginInfo();
+            if (loginContact == null) {
+                logger.i("detail#contact data are not ready");
+            }else{
+                init(imService);
+            }
+
         }
     };
 
