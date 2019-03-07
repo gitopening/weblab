@@ -149,6 +149,9 @@ public class LoginActivity extends TTBaseActivity {
                     showLoginPage();
                 }
 //                imService.getLoginManager().login(loginIdentity);
+                //byandly  这里先改为一样的显示登录界面，暂时不做自动登录处理
+                showLoginPage();
+                logger.d("login#start auto login-goto loginpage");
             }
         }, 500);
     }
