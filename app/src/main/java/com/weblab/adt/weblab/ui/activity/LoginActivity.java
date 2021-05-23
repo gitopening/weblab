@@ -250,8 +250,8 @@ public class LoginActivity extends TTBaseActivity {
         sign_switch_login_server_qq.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mNameView.setText("1005");
-                mPasswordView.setText("1005");
+                mNameView.setText("yang");
+                mPasswordView.setText("123456");
                 SystemConfigSp.instance().setStrConfig(SystemConfigSp.SysCfgDimension.LOGINSERVER, sign_switch_login_server_qq.getText().toString().trim());
             }
         });

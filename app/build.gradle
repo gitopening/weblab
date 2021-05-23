@@ -4,7 +4,7 @@ android {
     useLibrary 'org.apache.http.legacy'
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.weblab.adt.weblab"
+        applicationId 'com.weblab.adt.weblab'
         minSdkVersion 15
         targetSdkVersion 28
         versionCode 1

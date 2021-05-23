@@ -10,6 +10,8 @@ import android.os.IBinder;
 import com.weblab.adt.weblab.DB.sp.LoginSp;
 import com.weblab.adt.weblab.config.SysConstant;
 import com.weblab.adt.weblab.imservice.event.LoginEvent;
+import com.weblab.adt.weblab.imservice.manager.IMContactManager;
+import com.weblab.adt.weblab.imservice.manager.IMGroupManager;
 import com.weblab.adt.weblab.imservice.manager.IMLoginManager;
 import com.weblab.adt.weblab.imservice.manager.IMSocketManager;
 import com.weblab.adt.weblab.utils.Logger;
@@ -23,6 +25,9 @@ public class IMService extends Service {
     private IMSocketManager socketMgr = IMSocketManager.instance();
     private IMLoginManager loginMgr = IMLoginManager.instance();
     private LoginSp loginSp = LoginSp.instance();
+    private IMContactManager contactMgr = IMContactManager.instance();
+    private IMGroupManager groupMgr = IMGroupManager.instance();
+
 
     /**
      * binder
@@ -88,6 +93,15 @@ public class IMService extends Service {
     public LoginSp getLoginSp() {
         return loginSp;
     }
+
+    public IMContactManager getContactManager() {
+        return contactMgr;
+    }
+
+    public IMGroupManager getGroupManager() {
+        return groupMgr;
+    }
+
 
 
     // 负责初始化 每个manager
